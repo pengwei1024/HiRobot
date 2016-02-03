@@ -106,12 +106,17 @@ public class RobotService extends AccessibilityService {
     private void getPacket() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/lucky_money_title");
+        Log.e(TAG, "size=" + nodes.size());
         for (AccessibilityNodeInfo currentNode : nodes) {
-            String nodeId = getNodeId(currentNode);
-            if (!fetchedIdentifiers.contains(nodeId)) {
-                recycle(currentNode);
-                fetchedIdentifiers.add(nodeId);
-            }
+            Log.e(TAG, getNodeId(currentNode));
+//            String nodeId = getNodeId(currentNode.getParent().getParent().getParent());
+//            Log.e(TAG, nodeId);
+//            if (!fetchedIdentifiers.contains(nodeId)) {
+//                Log.e(TAG, "不存在：" + nodeId);
+//                recycle(currentNode);
+//                fetchedIdentifiers.add(nodeId);
+//            }
+            recycle(currentNode);
         }
     }
 
