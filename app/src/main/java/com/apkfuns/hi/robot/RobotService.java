@@ -109,14 +109,13 @@ public class RobotService extends AccessibilityService {
         Log.e(TAG, "size=" + nodes.size());
         for (AccessibilityNodeInfo currentNode : nodes) {
             Log.e(TAG, getNodeId(currentNode));
-//            String nodeId = getNodeId(currentNode.getParent().getParent().getParent());
-//            Log.e(TAG, nodeId);
-//            if (!fetchedIdentifiers.contains(nodeId)) {
-//                Log.e(TAG, "不存在：" + nodeId);
-//                recycle(currentNode);
-//                fetchedIdentifiers.add(nodeId);
-//            }
-            recycle(currentNode);
+            String nodeId = getNodeId(currentNode);
+            Log.e(TAG, nodeId);
+            if (!fetchedIdentifiers.contains(nodeId)) {
+                Log.e(TAG, "不存在：" + nodeId);
+                recycle(currentNode);
+                fetchedIdentifiers.add(nodeId);
+            }
         }
     }
 
@@ -144,7 +143,8 @@ public class RobotService extends AccessibilityService {
         Pattern pattern = Pattern.compile("(?<=@)[0-9|a-z]+(?=;)");
         Matcher matcher = pattern.matcher(node.toString());
         matcher.find();
-        return matcher.group(0);
+        String msg = node.getText().toString();
+        return msg + "@" + matcher.group(0);
     }
 
     @Override
