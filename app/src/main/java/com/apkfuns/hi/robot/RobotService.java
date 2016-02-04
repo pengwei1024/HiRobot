@@ -16,29 +16,32 @@ import java.util.List;
  */
 public class RobotService extends AccessibilityService {
 
-    private boolean currentIsChatActivity = false;
-
     // 聊天界面
     private static final String CHAT_CLASS_NAME = "com.baidu.hi.activities.Chat";
     // 红包界面
     private static final String LUCKY_MONEY_CLASS_NAME = "com.baidu.hi.luckymoney.LuckyMoneyActivity";
+    // 聊天列表
+    private static final String CONTACT_CLASS_NAME = "com.baidu.hi.activities.Contact";
 
-    // 上一个聊天列表
+    // 上一个聊天记录
     private List<AccessibilityNodeInfo> prevFetchList = new ArrayList<>();
+    // 当前activity的className
+    private String currentClassName = getClass().toString();
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         int eventType = event.getEventType();
         switch (eventType) {
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
-                if (currentIsChatActivity) {
+                if (currentClassName.equals(CHAT_CLASS_NAME)) {
                     getPacket();
+                } else if (currentClassName.equals(CONTACT_CLASS_NAME)) {
+                    intoChat();
                 }
                 break;
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
-                String className = event.getClassName().toString();
-                currentIsChatActivity = className.equals(CHAT_CLASS_NAME);
-                if (className.equals(LUCKY_MONEY_CLASS_NAME)) {
+                currentClassName = event.getClassName().toString();
+                if (currentClassName.equals(LUCKY_MONEY_CLASS_NAME)) {
                     openPacketDetail();
                 }
                 break;
@@ -46,6 +49,20 @@ public class RobotService extends AccessibilityService {
                 break;
         }
     }
+
+    /**
+     * 进去聊天界面
+     */
+    private void intoChat() {
+        AccessibilityNodeInfo rootNode = getRootInActiveWindow();
+        List<AccessibilityNodeInfo> messageList = rootNode.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/tv_message");
+        for (AccessibilityNodeInfo msgNode : messageList) {
+            if (msgNode.getText().toString().contains(": [百度红包]")) {
+                msgNode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+        }
+    }
+
 
     /**
      * 打开红包
