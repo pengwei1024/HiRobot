@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HiRobot</string>
+    <string name="description">百度Hi自动抢红包插件!</string>
 </resources>

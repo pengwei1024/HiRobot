@@ -4,6 +4,6 @@
     android:accessibilityFeedbackType="feedbackGeneric"
     android:accessibilityFlags="flagDefault"
     android:canRetrieveWindowContent="true"
-    android:description="@string/app_name"
+    android:description="@string/description"
     android:notificationTimeout="100"
     android:packageNames="com.baidu.hi" />

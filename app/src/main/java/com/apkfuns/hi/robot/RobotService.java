@@ -1,22 +1,21 @@
 package com.apkfuns.hi.robot;
 
 import android.accessibilityservice.AccessibilityService;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
+import com.apkfuns.hi.robot.utils.NodeUtils;
+import com.apkfuns.logutils.LogUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by pengwei on 16/2/2.
  */
 public class RobotService extends AccessibilityService {
 
-    private static final String TAG = "RobotService";
     private boolean currentIsChatActivity = false;
 
     // 聊天界面
@@ -24,10 +23,8 @@ public class RobotService extends AccessibilityService {
     // 红包界面
     private static final String LUCKY_MONEY_CLASS_NAME = "com.baidu.hi.luckymoney.LuckyMoneyActivity";
 
-    // 待领取红包列表
-    private List<AccessibilityNodeInfo> nodesToFetch = new ArrayList<>();
-    // 已经获取红包列表
-    private List<String> fetchedIdentifiers = new ArrayList<>();
+    // 上一个聊天列表
+    private List<AccessibilityNodeInfo> prevFetchList = new ArrayList<>();
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -42,7 +39,7 @@ public class RobotService extends AccessibilityService {
                 String className = event.getClassName().toString();
                 currentIsChatActivity = className.equals(CHAT_CLASS_NAME);
                 if (className.equals(LUCKY_MONEY_CLASS_NAME)) {
-                    openPacket();
+                    openPacketDetail();
                 }
                 break;
             default:
@@ -57,7 +54,7 @@ public class RobotService extends AccessibilityService {
      * 2.1 没抢到，退出页面
      * 2.2 抢过的，退出页面
      */
-    private void openPacket() {
+    private void openPacketDetail() {
         final AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         if (nodeInfo != null) {
             // 拆红包
@@ -103,21 +100,56 @@ public class RobotService extends AccessibilityService {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * 获取红包列表
+     */
     private void getPacket() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-        List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/lucky_money_title");
-        Log.e(TAG, "size=" + nodes.size());
-        for (AccessibilityNodeInfo currentNode : nodes) {
-            Log.e(TAG, getNodeId(currentNode));
-            String nodeId = getNodeId(currentNode);
-            Log.e(TAG, nodeId);
-            if (!fetchedIdentifiers.contains(nodeId)) {
-                Log.e(TAG, "不存在：" + nodeId);
-                recycle(currentNode);
-                fetchedIdentifiers.add(nodeId);
+        AccessibilityNodeInfo listNode = findNodeById(rootNode, "com.baidu.hi:id/chat_listview");
+        if (rootNode == null || listNode == null || listNode.getChildCount() == 0) {
+            return;
+        } else {
+            if (prevFetchList.size() == 0) {
+                LogUtils.e("*1");
+                openPacket(rootNode);
+            } else {
+                if (prevFetchList.size() != listNode.getChildCount()) {
+                    openPacket(rootNode);
+                    LogUtils.e("*2");
+                } else {
+                    if (listNode.getChildCount() == 1) {
+                        if (!NodeUtils.isSame(listNode.getChild(0), prevFetchList.get(0))) {
+                            openPacket(rootNode);
+                            LogUtils.e("*3");
+                        } else {
+                            LogUtils.e("*7");
+                        }
+                    } else {
+                        int last = listNode.getChildCount() - 1;
+                        if (!NodeUtils.isSame(listNode.getChild(0), prevFetchList.get(0))
+                                || !NodeUtils.isSame(listNode.getChild(last), prevFetchList.get(last))) {
+                            openPacket(rootNode);
+                            LogUtils.e("*4");
+                        } else {
+                            LogUtils.e("*5");
+                        }
+                    }
+                }
+            }
+            prevFetchList.clear();
+            for (int i = 0; i < listNode.getChildCount(); ++i) {
+                prevFetchList.add(listNode.getChild(i));
             }
         }
     }
+
+    private void openPacket(AccessibilityNodeInfo rootNode) {
+        List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/lucky_money_title");
+        for (AccessibilityNodeInfo currentNode : nodes) {
+            recycle(currentNode);
+        }
+    }
+
 
     public void recycle(AccessibilityNodeInfo info) {
         if (info != null) {
@@ -131,20 +163,6 @@ public class RobotService extends AccessibilityService {
                 parent = parent.getParent();
             }
         }
-    }
-
-    /**
-     * 获取结点唯一标识符
-     *
-     * @param node
-     * @return
-     */
-    private String getNodeId(AccessibilityNodeInfo node) {
-        Pattern pattern = Pattern.compile("(?<=@)[0-9|a-z]+(?=;)");
-        Matcher matcher = pattern.matcher(node.toString());
-        matcher.find();
-        String msg = node.getText().toString();
-        return msg + "@" + matcher.group(0);
     }
 
     @Override
