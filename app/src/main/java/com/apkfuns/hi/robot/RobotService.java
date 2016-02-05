@@ -6,6 +6,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import com.apkfuns.hi.robot.utils.NodeUtils;
+import com.apkfuns.hi.robot.utils.PowerUtil;
 import com.apkfuns.logutils.LogUtils;
 
 import java.util.ArrayList;
@@ -27,6 +28,15 @@ public class RobotService extends AccessibilityService {
     private List<AccessibilityNodeInfo> prevFetchList = new ArrayList<>();
     // 当前activity的className
     private String currentClassName = getClass().toString();
+    // 熄屏管理
+    private PowerUtil power;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        power = new PowerUtil(this);
+        power.handleWakeLock(true);
+    }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -185,5 +195,11 @@ public class RobotService extends AccessibilityService {
     @Override
     public void onInterrupt() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        power.handleWakeLock(false);
+        super.onDestroy();
     }
 }
