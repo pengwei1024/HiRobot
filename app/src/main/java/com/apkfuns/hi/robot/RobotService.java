@@ -11,6 +11,7 @@ import com.apkfuns.hi.robot.utils.NodeUtils;
 import com.apkfuns.hi.robot.utils.PowerUtil;
 import com.apkfuns.logutils.LogUtils;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class RobotService extends AccessibilityService {
     private PowerUtil power;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    protected void onServiceConnected() {
+        super.onServiceConnected();
         power = new PowerUtil(this);
         power.handleWakeLock(true);
     }
@@ -115,31 +116,19 @@ public class RobotService extends AccessibilityService {
         final AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         if (nodeInfo != null) {
             // 拆红包
-            AccessibilityNodeInfo openLucky = findNodeById(nodeInfo, "com.baidu.hi:id/envelope_open");
+            AccessibilityNodeInfo openLucky = NodeUtils.findNodeById(nodeInfo, "com.baidu.hi:id/envelope_open");
             if (openLucky != null) {
                 performGlobalAction(GLOBAL_ACTION_BACK);
                 openLucky.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             } else {
                 // 关闭页面
                 AccessibilityNodeInfo closeNode = null;
-                if ((closeNode = findNodeById(nodeInfo, "com.baidu.hi:id/close_btn")) != null
-                        || (closeNode = findNodeById(nodeInfo, "com.baidu.hi:id/btn_close")) != null) {
+                if ((closeNode = NodeUtils.findNodeById(nodeInfo, "com.baidu.hi:id/close_btn")) != null
+                        || (closeNode = NodeUtils.findNodeById(nodeInfo, "com.baidu.hi:id/btn_close")) != null) {
                     closeNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
             }
         }
-    }
-
-    /**
-     * replace with NodeUtils.findNodeById()
-     *
-     * @param nodeInfo
-     * @param viewId
-     * @return
-     */
-    @Deprecated
-    private AccessibilityNodeInfo findNodeById(AccessibilityNodeInfo nodeInfo, String viewId) {
-        return NodeUtils.findNodeById(nodeInfo, viewId);
     }
 
     /**
@@ -156,7 +145,7 @@ public class RobotService extends AccessibilityService {
      */
     private void getPacket() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-        AccessibilityNodeInfo listNode = findNodeById(rootNode, "com.baidu.hi:id/chat_listview");
+        AccessibilityNodeInfo listNode = NodeUtils.findNodeById(rootNode, "com.baidu.hi:id/chat_listview");
         if (rootNode == null || listNode == null || listNode.getChildCount() == 0) {
             return;
         } else {
@@ -193,7 +182,7 @@ public class RobotService extends AccessibilityService {
             }
         }
         // 顶部消息通知
-        AccessibilityNodeInfo notifyText = findNodeById(rootNode, "com.baidu.hi:id/chat_msg_notification_info");
+        AccessibilityNodeInfo notifyText = NodeUtils.findNodeById(rootNode, "com.baidu.hi:id/chat_msg_notification_info");
         if (notifyText != null && notifyText.getText().toString().contains("[百度红包]")) {
             notifyText.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }

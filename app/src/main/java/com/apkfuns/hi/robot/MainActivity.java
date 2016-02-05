@@ -60,11 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onAccessibilityStateChanged(boolean enabled) {
         if (isServiceEnabled()) {
-            clickBtn.setText("已经启用");
-            clickBtn.setClickable(false);
+            clickBtn.setText("关闭辅助");
         } else {
             clickBtn.setText("打开辅助功能");
-            clickBtn.setClickable(true);
         }
     }
 }
