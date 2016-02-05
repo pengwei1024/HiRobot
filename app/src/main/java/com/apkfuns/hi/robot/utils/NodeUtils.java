@@ -43,4 +43,22 @@ public class NodeUtils {
         }
         return false;
     }
+
+    /**
+     * 根据id查找结点，存在返回不存在返回null
+     *
+     * @param nodeInfo
+     * @param viewId
+     * @return
+     */
+    public static AccessibilityNodeInfo findNodeById(AccessibilityNodeInfo nodeInfo, String viewId) {
+        if (nodeInfo == null || viewId == null) {
+            return null;
+        }
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByViewId(viewId);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

@@ -131,21 +131,15 @@ public class RobotService extends AccessibilityService {
     }
 
     /**
-     * 根据id查找结点，存在返回不存在返回null
+     * replace with NodeUtils.findNodeById()
      *
      * @param nodeInfo
      * @param viewId
      * @return
      */
+    @Deprecated
     private AccessibilityNodeInfo findNodeById(AccessibilityNodeInfo nodeInfo, String viewId) {
-        if (nodeInfo == null || viewId == null) {
-            return null;
-        }
-        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByViewId(viewId);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }
-        return null;
+        return NodeUtils.findNodeById(nodeInfo, viewId);
     }
 
     /**
@@ -197,6 +191,11 @@ public class RobotService extends AccessibilityService {
             for (int i = 0; i < listNode.getChildCount(); ++i) {
                 prevFetchList.add(listNode.getChild(i));
             }
+        }
+        // 顶部消息通知
+        AccessibilityNodeInfo notifyText = findNodeById(rootNode, "com.baidu.hi:id/chat_msg_notification_info");
+        if (notifyText != null && notifyText.getText().toString().contains("[百度红包]")) {
+            notifyText.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
     }
 
