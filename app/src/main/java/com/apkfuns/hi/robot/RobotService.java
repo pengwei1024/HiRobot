@@ -1,6 +1,8 @@
 package com.apkfuns.hi.robot;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
@@ -55,8 +57,36 @@ public class RobotService extends AccessibilityService {
                     openPacketDetail();
                 }
                 break;
+            case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
+                listenerNotification(event);
+                break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 监听通知栏变化
+     *
+     * @param event
+     */
+    private void listenerNotification(AccessibilityEvent event) {
+        List<CharSequence> texts = event.getText();
+        if (texts != null && !texts.isEmpty()) {
+            for (CharSequence text : texts) {
+                if (text.toString().contains("[百度红包]")) {
+                    if (event.getParcelableData() != null &&
+                            event.getParcelableData() instanceof Notification) {
+                        Notification notification = (Notification) event.getParcelableData();
+                        PendingIntent pendingIntent = notification.contentIntent;
+                        try {
+                            pendingIntent.send();
+                        } catch (PendingIntent.CanceledException e) {
+                            LogUtils.e(e);
+                        }
+                    }
+                }
+            }
         }
     }
 
