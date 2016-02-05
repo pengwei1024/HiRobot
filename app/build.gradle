@@ -9,7 +9,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -24,4 +24,14 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.apkfuns.logutils:library:1.0.6'
+}
+
+build << {
+    def version = android.defaultConfig.versionName
+    copy {
+        from("$buildDir/outputs/apk/app-debug.apk") {
+            rename 'app-debug.apk', "hiRobot-$version-debug.apk"
+        }
+        into new File(rootDir, 'apk')
+    }
 }
