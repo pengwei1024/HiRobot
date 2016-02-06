@@ -39,6 +39,26 @@ public class NodeUtils {
         }
         if (MessageType.getMsgType(node1) == MessageType.getMsgType(node2)
                 && node1.getChildCount() == node2.getChildCount()) {
+            switch (MessageType.getMsgType(node1)) {
+                case MessageType.MSG_PACKAGE:
+                    String titleId = "com.baidu.hi:id/lucky_money_title";
+                    AccessibilityNodeInfo title1 = NodeUtils.findNodeById(node1, titleId);
+                    AccessibilityNodeInfo title2 = NodeUtils.findNodeById(node2, titleId);
+                    if (title1 == null || title2 == null || !title1.getText().equals(title2.getText())) {
+                        return false;
+                    }
+                    break;
+                case MessageType.MSG_TEXT:
+                    String textId = "com.baidu.hi:id/chat_item_left_text_content";
+                    AccessibilityNodeInfo text1 = NodeUtils.findNodeById(node1, textId);
+                    AccessibilityNodeInfo text2 = NodeUtils.findNodeById(node2, textId);
+                    if (text1 != null && text2 != null && !text1.getText().equals(text2.getText())) {
+                        return false;
+                    }
+                    break;
+                default:
+                    break;
+            }
             return true;
         }
         return false;
