@@ -8,6 +8,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import com.apkfuns.hi.robot.model.Ids;
+import com.apkfuns.hi.robot.model.MessageType;
 import com.apkfuns.hi.robot.utils.NodeUtils;
 import com.apkfuns.hi.robot.utils.PowerUtil;
 import com.apkfuns.logutils.LogUtils;
@@ -162,8 +163,15 @@ public class RobotService extends AccessibilityService {
                 openPacket(rootNode);
             } else {
                 if (prevFetchList.size() != listNode.getChildCount()) {
-                    openPacket(rootNode);
-                    LogUtils.e("*2");
+                    if (prevFetchList.size() == listNode.getChildCount() - 1
+                            && MessageType.getMsgType(listNode.getChild(listNode.getChildCount() - 1))
+                            != MessageType.MSG_PACKAGE) {
+                        // 新增一条记录而且不是红包就不抢
+                        LogUtils.e("*8");
+                    } else {
+                        openPacket(rootNode);
+                        LogUtils.e("*2");
+                    }
                 } else {
                     if (listNode.getChildCount() == 1) {
                         if (!NodeUtils.isSame(listNode.getChild(0), prevFetchList.get(0))) {
