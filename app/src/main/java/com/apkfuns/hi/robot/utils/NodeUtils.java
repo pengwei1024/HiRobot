@@ -2,6 +2,7 @@ package com.apkfuns.hi.robot.utils;
 
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.apkfuns.hi.robot.model.Ids;
 import com.apkfuns.hi.robot.model.MessageType;
 
 import java.util.List;
@@ -41,17 +42,15 @@ public class NodeUtils {
                 && node1.getChildCount() == node2.getChildCount()) {
             switch (MessageType.getMsgType(node1)) {
                 case MessageType.MSG_PACKAGE:
-                    String titleId = "com.baidu.hi:id/lucky_money_title";
-                    AccessibilityNodeInfo title1 = NodeUtils.findNodeById(node1, titleId);
-                    AccessibilityNodeInfo title2 = NodeUtils.findNodeById(node2, titleId);
+                    AccessibilityNodeInfo title1 = NodeUtils.findNodeById(node1, Ids.LUCKY_MONEY_TITLE);
+                    AccessibilityNodeInfo title2 = NodeUtils.findNodeById(node2, Ids.LUCKY_MONEY_TITLE);
                     if (title1 == null || title2 == null || !title1.getText().equals(title2.getText())) {
                         return false;
                     }
                     break;
                 case MessageType.MSG_TEXT:
-                    String textId = "com.baidu.hi:id/chat_item_left_text_content";
-                    AccessibilityNodeInfo text1 = NodeUtils.findNodeById(node1, textId);
-                    AccessibilityNodeInfo text2 = NodeUtils.findNodeById(node2, textId);
+                    AccessibilityNodeInfo text1 = NodeUtils.findNodeById(node1, Ids.CHAT_LEFT_CONTENT);
+                    AccessibilityNodeInfo text2 = NodeUtils.findNodeById(node2, Ids.CHAT_LEFT_CONTENT);
                     if (text1 != null && text2 != null && !text1.getText().equals(text2.getText())) {
                         return false;
                     }

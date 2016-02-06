@@ -7,6 +7,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
+import com.apkfuns.hi.robot.model.Ids;
 import com.apkfuns.hi.robot.utils.NodeUtils;
 import com.apkfuns.hi.robot.utils.PowerUtil;
 import com.apkfuns.logutils.LogUtils;
@@ -29,6 +30,8 @@ public class RobotService extends AccessibilityService {
 
     // 上一个聊天记录
     private List<AccessibilityNodeInfo> prevFetchList = new ArrayList<>();
+    // 上一个记录红包个数
+    private int prevPackageCount = 0;
     // 当前activity的className
     private String currentClassName = getClass().toString();
     // 熄屏管理
@@ -96,7 +99,7 @@ public class RobotService extends AccessibilityService {
      */
     private void intoChat() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-        List<AccessibilityNodeInfo> messageList = rootNode.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/tv_message");
+        List<AccessibilityNodeInfo> messageList = rootNode.findAccessibilityNodeInfosByViewId(Ids.TEXT_VIEW_MESSAGE);
         for (AccessibilityNodeInfo msgNode : messageList) {
             if (msgNode.getText().toString().contains(": [百度红包]")) {
                 msgNode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -116,15 +119,15 @@ public class RobotService extends AccessibilityService {
         final AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         if (nodeInfo != null) {
             // 拆红包
-            AccessibilityNodeInfo openLucky = NodeUtils.findNodeById(nodeInfo, "com.baidu.hi:id/envelope_open");
+            AccessibilityNodeInfo openLucky = NodeUtils.findNodeById(nodeInfo, Ids.ENVELOPE_OPEN);
             if (openLucky != null) {
                 performGlobalAction(GLOBAL_ACTION_BACK);
                 openLucky.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             } else {
                 // 关闭页面
                 AccessibilityNodeInfo closeNode = null;
-                if ((closeNode = NodeUtils.findNodeById(nodeInfo, "com.baidu.hi:id/close_btn")) != null
-                        || (closeNode = NodeUtils.findNodeById(nodeInfo, "com.baidu.hi:id/btn_close")) != null) {
+                if ((closeNode = NodeUtils.findNodeById(nodeInfo, Ids.CLOSE_BTN)) != null
+                        || (closeNode = NodeUtils.findNodeById(nodeInfo, Ids.BTN_CLOSE)) != null) {
                     closeNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
             }
@@ -145,9 +148,14 @@ public class RobotService extends AccessibilityService {
      */
     private void getPacket() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-        AccessibilityNodeInfo listNode = NodeUtils.findNodeById(rootNode, "com.baidu.hi:id/chat_listview");
+        AccessibilityNodeInfo listNode = NodeUtils.findNodeById(rootNode, Ids.CHAT_LIST_VIEW);
+        int packageCount = rootNode.findAccessibilityNodeInfosByViewId(Ids.LUCKY_MONEY_TITLE).size();
         if (rootNode == null || listNode == null || listNode.getChildCount() == 0) {
             return;
+        } else if (packageCount != prevPackageCount) {
+            // 页面中红包个数不相等
+            openPacket(rootNode);
+            prevPackageCount = packageCount;
         } else {
             if (prevFetchList.size() == 0) {
                 LogUtils.e("*1");
@@ -182,16 +190,22 @@ public class RobotService extends AccessibilityService {
             }
         }
         // 顶部消息通知
-        AccessibilityNodeInfo notifyText = NodeUtils.findNodeById(rootNode, "com.baidu.hi:id/chat_msg_notification_info");
+        AccessibilityNodeInfo notifyText = NodeUtils.findNodeById(rootNode, Ids.MSG_NOTIFY_INFO);
         if (notifyText != null && notifyText.getText().toString().contains("[百度红包]")) {
             notifyText.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
     }
 
+    /**
+     * 打开红包
+     *
+     * @param rootNode
+     */
     private void openPacket(AccessibilityNodeInfo rootNode) {
-        List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/lucky_money_title");
-        for (AccessibilityNodeInfo currentNode : nodes) {
-            recycle(currentNode);
+        List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByViewId(Ids.LUCKY_MONEY_TITLE);
+        // 倒顺，先抢最新的红包
+        for (int i = nodes.size() - 1; i >= 0; i--) {
+            recycle(nodes.get(i));
         }
     }
 

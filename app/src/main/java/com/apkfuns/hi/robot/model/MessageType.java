@@ -4,6 +4,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.apkfuns.hi.robot.utils.NodeUtils;
 
+
 /**
  * Created by pengwei on 16/2/4.
  * 消息类型
@@ -28,13 +29,13 @@ public class MessageType {
      * @return
      */
     public static int getMsgType(AccessibilityNodeInfo node) {
-        if (NodeUtils.exist(node, "com.baidu.hi:id/chat_item_lucky_money_notify")) {
+        if (NodeUtils.exist(node, Ids.LUCKY_MONEY_NOTIFY)) {
             return MSG_PACKAGE_RESULT;
-        } else if (NodeUtils.exist(node, "com.baidu.hi:id/lucky_money_title")) {
+        } else if (NodeUtils.exist(node, Ids.LUCKY_MONEY_TITLE)) {
             return MSG_PACKAGE;
-        } else if (NodeUtils.exist(node, "com.baidu.hi:id/chat_item_text_unread_line")) {
+        } else if (NodeUtils.exist(node, Ids.UNREAD_LINE)) {
             return MSG_HISTORY;
-        } else if (NodeUtils.exist(node, "com.baidu.hi:id/chat_item_text_date")) {
+        } else if (NodeUtils.exist(node, Ids.TEXT_DATE)) {
             return MSG_TIME;
         }
         return MSG_TEXT;
