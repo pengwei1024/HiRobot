@@ -2,12 +2,12 @@
 百度hi自动抢红包插件
 
 ### 安装插件
-<img src='shotscreen/code.png' width='300px'/><br/>
+<img src='screenshot/code.png' width='300px'/><br/>
 <a href='https://github.com/pengwei1024/HiRobot/blob/master/apk/hiRobot-release-newest.apk?raw=true' target='_blank'>点击下载</a>
 
 ### 使用插件
-<img src='shotscreen/s1.png' width='500px'/><br/>
-<img src='shotscreen/s2.png' width='500px'/><br/>
+<img src='screenshot/s1.jpg' width='500px'/><br/>
+<img src='screenshot/s2.jpg' width='500px'/><br/>
 
 ## About
 * Blog: [apkfuns.com](http://apkfuns.com?from=github)
