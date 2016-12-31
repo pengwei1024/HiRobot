@@ -7,7 +7,7 @@
 
 ### 使用插件
 <img src='http://qiniu.apkfuns.com/hirobot_s1.png' width='500px'/><br/>
-<img src='http://qiniu.apkfuns.com/hirobot_s2.png' width='500px'/><br/>
+<img src='http://qiniu.apkfuns.com/hirobot_s2.jpg' width='500px'/><br/>
 
 ## About
 * Blog: [apkfuns.com](http://apkfuns.com?from=github)
