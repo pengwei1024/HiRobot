@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">HiRobot</string>
-    <string name="description">百度Hi自动抢红包插件!</string>
+    <string name="app_name">百度Hi红包</string>
+    <string name="description">百度Hi自动抢红包插件。\n\n启用插件后，登录好百度Hi，打开主界面就可以愉快的自动抢红包啦O(∩_∩)O</string>
 </resources>

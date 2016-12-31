@@ -2,6 +2,7 @@ package com.apkfuns.hi.robot.model;
 
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.apkfuns.hi.robot.Constant;
 import com.apkfuns.hi.robot.utils.NodeUtils;
 
 
@@ -29,13 +30,13 @@ public class MessageType {
      * @return
      */
     public static int getMsgType(AccessibilityNodeInfo node) {
-        if (NodeUtils.exist(node, Ids.LUCKY_MONEY_NOTIFY)) {
+        if (NodeUtils.exist(node, Constant.getLuckyMoneyNotify())) {
             return MSG_PACKAGE_RESULT;
-        } else if (NodeUtils.exist(node, Ids.LUCKY_MONEY_TITLE)) {
+        } else if (NodeUtils.exist(node, Constant.getLuckyMoneyTitle())) {
             return MSG_PACKAGE;
-        } else if (NodeUtils.exist(node, Ids.UNREAD_LINE)) {
+        } else if (NodeUtils.exist(node, Constant.getUnreadLine())) {
             return MSG_HISTORY;
-        } else if (NodeUtils.exist(node, Ids.TEXT_DATE)) {
+        } else if (NodeUtils.exist(node, Constant.getTextDate())) {
             return MSG_TIME;
         }
         return MSG_TEXT;
