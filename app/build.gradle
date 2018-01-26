@@ -2,12 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'debug'
-            keyPassword '123456'
-            storeFile file("$rootDir/pengwei_debug.jks")
-            storePassword '123456'
-        }
+
     }
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -22,10 +17,23 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
         }
         debug {
-            signingConfig signingConfigs.config
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            def fileName = "hiRobot-release-newest.apk"
+            if (outputFile != null && outputFile.name.endsWith('.apk')
+            && variant.buildType.name == "debug" ) {
+                copy {
+                    from outputFile
+                    into new File("$rootDir/apk")
+                    rename("app-${variant.buildType.name}.apk", fileName)
+                }
+                print("####" + outputFile.absolutePath)
+            }
         }
     }
 }
@@ -35,13 +43,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.apkfuns.logutils:library:1.0.6'
-}
-
-build << {
-    copy {
-        from("$buildDir/outputs/apk/app-release.apk") {
-            rename 'app-release.apk', "hiRobot-release-newest.apk"
-        }
-        into new File(rootDir, 'apk')
-    }
 }

@@ -1,5 +1,5 @@
 # HiRobot
-百度hi自动抢红包插件
+百度Hi自动抢红包插件, 支持普通红包、点赞红包
 
 ### 安装插件
 <img src='http://qiniu.apkfuns.com/hirobot_code.png' width='300px'/><br/>

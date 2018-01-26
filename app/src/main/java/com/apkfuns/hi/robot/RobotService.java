@@ -100,9 +100,16 @@ public class RobotService extends AccessibilityService {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         List<AccessibilityNodeInfo> messageList = rootNode.findAccessibilityNodeInfosByViewId(
                 Constant.getTextViewMessage());
+        if (messageList == null || messageList.isEmpty()) {
+            return;
+        }
         for (AccessibilityNodeInfo msgNode : messageList) {
-            if (msgNode.getText().toString().contains("[百度红包]")) {
-                msgNode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            if (msgNode != null && (msgNode.getText().toString().contains("[百度红包]")
+            || msgNode.getText().toString().contains("[点赞红包]"))) {
+                if (msgNode.getParent() != null) {
+                    msgNode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    break;
+                }
             }
         }
     }
@@ -150,7 +157,7 @@ public class RobotService extends AccessibilityService {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         AccessibilityNodeInfo listNode = NodeUtils.findNodeById(rootNode, Constant.getChatListView());
         int packageCount = rootNode.findAccessibilityNodeInfosByViewId(Constant.getLuckyMoneyTitle()).size();
-        if (rootNode == null || listNode == null || listNode.getChildCount() == 0) {
+        if (listNode == null || listNode.getChildCount() == 0) {
             return;
         } else if (packageCount != prevPackageCount) {
             // 页面中红包个数不相等
@@ -204,6 +211,7 @@ public class RobotService extends AccessibilityService {
     private void openPacket(AccessibilityNodeInfo rootNode) {
         List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByViewId(
                 Constant.getLuckyMoneyTitle());
+        nodes.addAll(rootNode.findAccessibilityNodeInfosByViewId(Constant.getResId("like_lm_msg")));
         // 倒序，先抢最新的红包
         for (int i = nodes.size() - 1; i >= 0; i--) {
             recycle(nodes.get(i));

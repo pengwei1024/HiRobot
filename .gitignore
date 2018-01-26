@@ -11,5 +11,6 @@
 /captures
 
 *.jks
+*unsigned.apk
 
 
