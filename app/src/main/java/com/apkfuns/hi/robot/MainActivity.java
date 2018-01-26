@@ -33,8 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.click_func:
-                Intent killIntent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                startActivity(killIntent);
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 break;
             default:
                 break;

@@ -29,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="打开辅助功能" />
+            android:text="启用辅助功能"
+            android:layout_marginBottom="30dp"/>
 
     </LinearLayout>
 </ScrollView>
