@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,8 +13,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:src="@mipmap/hi_package"
-            android:maxHeight="100dp"/>
+            android:maxHeight="100dp"
+            android:src="@mipmap/hi_package" />
 
         <TextView
             android:layout_width="match_parent"
@@ -29,8 +29,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="启用辅助功能"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="30dp"
+            android:text="启用辅助功能" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <EditText
+                android:id="@+id/delayTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="延迟时间"
+                android:inputType="number"
+                android:text="0" />
+        </android.support.design.widget.TextInputLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 </ScrollView>

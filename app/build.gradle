@@ -4,8 +4,8 @@ android {
     signingConfigs {
 
     }
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.apkfuns.hi.robot"
         minSdkVersion 18
@@ -41,6 +41,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support:design:27.1.1'
     compile 'com.apkfuns.logutils:library:1.0.6'
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 
 import java.util.List;
@@ -18,15 +19,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AccessibilityManager accessibilityManager;
     private Button clickBtn;
+    private EditText delayTimeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         accessibilityManager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
-        accessibilityManager.addAccessibilityStateChangeListener(this);
-        clickBtn = (Button) findViewById(R.id.click_func);
+        if (accessibilityManager != null) {
+            accessibilityManager.addAccessibilityStateChangeListener(this);
+        }
+        clickBtn = findViewById(R.id.click_func);
         clickBtn.setOnClickListener(this);
+        delayTimeText = findViewById(R.id.delayTime);
     }
 
     @Override
@@ -45,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 抢红包服务是否启用
      *
-     * @return
+     * @return bool
      */
     private boolean isServiceEnabled() {
         List<AccessibilityServiceInfo> accessibilityServices =

@@ -98,6 +98,9 @@ public class RobotService extends AccessibilityService {
      */
     private void intoChat() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
+        if (rootNode == null) {
+            return;
+        }
         List<AccessibilityNodeInfo> messageList = rootNode.findAccessibilityNodeInfosByViewId(
                 Constant.getTextViewMessage());
         if (messageList == null || messageList.isEmpty()) {
@@ -105,7 +108,7 @@ public class RobotService extends AccessibilityService {
         }
         for (AccessibilityNodeInfo msgNode : messageList) {
             if (msgNode != null && (msgNode.getText().toString().contains("[百度红包]")
-            || msgNode.getText().toString().contains("[点赞红包]"))) {
+                    || msgNode.getText().toString().contains("[点赞红包]"))) {
                 if (msgNode.getParent() != null) {
                     msgNode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     break;
@@ -132,7 +135,7 @@ public class RobotService extends AccessibilityService {
                 openLucky.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             } else {
                 // 关闭页面
-                AccessibilityNodeInfo closeNode = null;
+                AccessibilityNodeInfo closeNode;
                 if ((closeNode = NodeUtils.findNodeById(nodeInfo, Constant.getCloseBtn())) != null
                         || (closeNode = NodeUtils.findNodeById(nodeInfo, Constant.getBtnClose())) != null) {
                     closeNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -156,6 +159,9 @@ public class RobotService extends AccessibilityService {
     private void getPacket() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         AccessibilityNodeInfo listNode = NodeUtils.findNodeById(rootNode, Constant.getChatListView());
+        if (rootNode == null) {
+            return;
+        }
         int packageCount = rootNode.findAccessibilityNodeInfosByViewId(Constant.getLuckyMoneyTitle()).size();
         if (listNode == null || listNode.getChildCount() == 0) {
             return;
