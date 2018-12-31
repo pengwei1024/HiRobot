@@ -3,6 +3,8 @@ package com.apkfuns.hi.robot;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
@@ -34,12 +36,14 @@ public class RobotService extends AccessibilityService {
     private int prevPackageCount = 0;
     // 熄屏管理
     private PowerUtil power;
+    private Handler handler;
 
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
         power = new PowerUtil(this);
         power.handleWakeLock(true);
+        handler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -214,14 +218,19 @@ public class RobotService extends AccessibilityService {
      *
      * @param rootNode
      */
-    private void openPacket(AccessibilityNodeInfo rootNode) {
-        List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByViewId(
-                Constant.getLuckyMoneyTitle());
-        nodes.addAll(rootNode.findAccessibilityNodeInfosByViewId(Constant.getResId("like_lm_msg")));
-        // 倒序，先抢最新的红包
-        for (int i = nodes.size() - 1; i >= 0; i--) {
-            recycle(nodes.get(i));
-        }
+    private void openPacket(final AccessibilityNodeInfo rootNode) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByViewId(
+                        Constant.getLuckyMoneyTitle());
+                nodes.addAll(rootNode.findAccessibilityNodeInfosByViewId(Constant.getResId("like_lm_msg")));
+                // 倒序，先抢最新的红包
+                for (int i = nodes.size() - 1; i >= 0; i--) {
+                    recycle(nodes.get(i));
+                }
+            }
+        }, MainActivity.getDelayTime());
     }
 
 

@@ -43,11 +43,12 @@
                 android:id="@+id/delayTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="延迟时间"
+                android:hint="延迟时间 / ms"
                 android:inputType="number"
                 android:text="0" />
         </android.support.design.widget.TextInputLayout>
         <Button
+            android:id="@+id/btnSaveDelay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="保存"

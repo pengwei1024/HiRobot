@@ -12,10 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
+import com.apkfuns.hi.robot.utils.SharedPreferenceUtil;
+
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         AccessibilityManager.AccessibilityStateChangeListener {
+
+    private static final String KEY_DELAY_TIME = "KEY_DELAY_TIME";
+    private static long delayTime = 0;
 
     private AccessibilityManager accessibilityManager;
     private Button clickBtn;
@@ -32,6 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clickBtn = findViewById(R.id.click_func);
         clickBtn.setOnClickListener(this);
         delayTimeText = findViewById(R.id.delayTime);
+        delayTime = SharedPreferenceUtil.getInstance().getLong(KEY_DELAY_TIME);
+        delayTimeText.setText(String.valueOf(delayTime));
+        Button delayBtn = findViewById(R.id.btnSaveDelay);
+        delayBtn.setOnClickListener(this);
     }
 
     @Override
@@ -41,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                break;
+            case R.id.btnSaveDelay:
+                delayTime = Long.parseLong(delayTimeText.getText().toString());
+                SharedPreferenceUtil.getInstance().put(KEY_DELAY_TIME, delayTime);
                 break;
             default:
                 break;
@@ -70,5 +84,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             clickBtn.setText("打开辅助功能");
         }
+    }
+
+    public static long getDelayTime() {
+        if (delayTime <= 0) {
+            return 0;
+        }
+        Random random = new Random();
+        int rand = random.nextInt((int) delayTime);
+        return rand < delayTime / 3 ? delayTime / 3 : rand;
     }
 }
